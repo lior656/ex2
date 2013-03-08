@@ -28,7 +28,7 @@ public class TodoListManagerActivity extends Activity {
         List<String> todoList = new ArrayList<String>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);
         
-        listTODOadapter = new ArrayAdapter<String>(this,android.R.layout.simple_list_item_1,todoList);
+        listTODOadapter = new BlueRedAdaptor(this, todoList);
         listTodo.setAdapter(listTODOadapter);
 
     }

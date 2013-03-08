@@ -27,9 +27,9 @@ public final class R {
         public static final int LinearLayout2=0x7f080000;
         public static final int edtNewItem=0x7f080001;
         public static final int lstTodoItems=0x7f080002;
+        public static final int main_text=0x7f080003;
         public static final int menuItemAdd=0x7f080004;
         public static final int menuItemDelete=0x7f080005;
-        public static final int textView1=0x7f080003;
     }
     public static final class layout {
         public static final int activity_todo_list_manager=0x7f030000;
