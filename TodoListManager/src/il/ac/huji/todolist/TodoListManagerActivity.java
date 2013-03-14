@@ -19,9 +19,10 @@ import android.widget.ListView;
 public class TodoListManagerActivity extends Activity {
 
 	
-	private ArrayAdapter<String> listTODOadapter;
+	private ArrayAdapter<ListItem> listTODOadapter;
 	private EditText todoText;
 	private  ListView listTodo;
+	List<ListItem> todoList;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +30,7 @@ public class TodoListManagerActivity extends Activity {
         setContentView(R.layout.activity_todo_list_manager);
         
         todoText = (EditText) findViewById(R.id.edtNewItem);
-        List<String> todoList = new ArrayList<String>();
+        todoList = new ArrayList<ListItem>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);
         
         listTODOadapter = new BlueRedAdaptor(this, todoList);
@@ -51,7 +52,7 @@ public class TodoListManagerActivity extends Activity {
     	switch (item.getItemId()) {
     		case R.id.menuItemAdd:
     			String addStr = todoText.getText().toString();
-    			listTODOadapter.add(addStr);
+    			listTODOadapter.add(new ListItem(addStr , null));//TODO
     			break;
     	}
     	return true;
@@ -60,6 +61,14 @@ public class TodoListManagerActivity extends Activity {
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		getMenuInflater().inflate(R.menu.todo_list_context_menu, menu);
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
+        int pos = info.position;
+        String str = listTODOadapter.getItem(pos)._todo_title;
+		menu.setHeaderTitle(str);
+		
+		if( str.startsWith("Call ")){
+			menu.getItem(index)
+		}
 	}
 
 	@Override

@@ -1,4 +1,4 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/menuItemDelete" android:title="@string/menuDelete"></item>
-    <item android:id="@+id/menuItemCall" android:title="@string/todoStr"> </item>
+    <item android:id="@+id/menuItemCall" android:title="@string/todoStr" android:visible="false"> </item>
 </menu>

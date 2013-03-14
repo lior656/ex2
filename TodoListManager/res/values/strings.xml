@@ -8,6 +8,7 @@
     <string name="menuAdd">Add</string>
     <string name="menuDelete">Delete Item</string>
     <string name="todoStr">todo</string>
+    <string name="noDate">No due date</string>
      
 
 </resources>
