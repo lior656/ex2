@@ -6,7 +6,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="edtNewHint"></string>
     <string name="menuAdd">Add</string>
-    <string name="menuDelete">Delete</string>
+    <string name="menuDelete">Delete Item</string>
+    <string name="todoStr">todo</string>
      
 
 </resources>

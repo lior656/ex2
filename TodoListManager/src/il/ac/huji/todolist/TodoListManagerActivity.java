@@ -5,9 +5,13 @@ import java.util.List;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -30,6 +34,7 @@ public class TodoListManagerActivity extends Activity {
         
         listTODOadapter = new BlueRedAdaptor(this, todoList);
         listTodo.setAdapter(listTODOadapter);
+        registerForContextMenu(listTodo);
 
     }
 
@@ -48,13 +53,27 @@ public class TodoListManagerActivity extends Activity {
     			String addStr = todoText.getText().toString();
     			listTODOadapter.add(addStr);
     			break;
-    		case R.id.menuItemDelete:
-    	        int cheackedPos = listTodo.getCheckedItemPosition();
-    	        if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
-    	        	listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
-    	        }
-    			break;
     	}
     	return true;
     }
+    
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+		getMenuInflater().inflate(R.menu.todo_list_context_menu, menu);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem item) {
+		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
+		int cheackedPos = info.position;
+		switch (item.getItemId()){
+			case R.id.menuItemDelete:
+				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
+    	        	listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
+    	        }
+				break;
+		}
+		return true;
+	}
+
 }
