@@ -15,16 +15,15 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ListView;
 
 public class TodoListManagerActivity extends Activity {
 
 	
 	private ArrayAdapter<ListItem> listTODOadapter;
-	private EditText todoText;
 	private  ListView listTodo;
 	private String callStr = "Call ";
+	private final int add_result_num = 656;
 	List<ListItem> todoList;
 	
     @Override
@@ -32,7 +31,6 @@ public class TodoListManagerActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
         
-        todoText = (EditText) findViewById(R.id.edtNewItem);
         todoList = new ArrayList<ListItem>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);
         
@@ -54,11 +52,22 @@ public class TodoListManagerActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
     	switch (item.getItemId()) {
     		case R.id.menuItemAdd:
-    			String addStr = todoText.getText().toString();
-    			listTODOadapter.add(new ListItem(addStr , null));//TODO
+    			Intent intent = new Intent(this, AddNewTodoItemActivity.class);
+    			startActivityForResult(intent, add_result_num);
     			break;
     	}
     	return true;
+    }
+    
+    protected void onActivityResult(int reqCode, int resCode, Intent data) {
+    	switch (reqCode) {
+    	case add_result_num:
+    		if(resCode == RESULT_OK ){
+    			String todo_title = data.getStringExtra("title");
+    			listTODOadapter.add(new ListItem(todo_title, null));  //TODO add "dueDate" of type java.util.Date
+    		}
+    		break;
+    	}
     }
     
 	@Override

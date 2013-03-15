@@ -9,6 +9,9 @@
     <string name="menuDelete">Delete Item</string>
     <string name="todoStr">todo</string>
     <string name="noDate">No due date</string>
+     <string name="emptyStr"></string>
+     <string name="cancelStr">Cancel</string>
+     <string name="okStr">OK</string>
      
 
 </resources>
