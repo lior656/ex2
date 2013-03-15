@@ -1,6 +1,7 @@
 package il.ac.huji.todolist;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.net.Uri;
@@ -35,7 +36,7 @@ public class TodoListManagerActivity extends Activity {
         todoList = new ArrayList<ListItem>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);
         
-        listTODOadapter = new BlueRedAdaptor(this, todoList);
+        listTODOadapter = new RedIsOldAdaptor(this, todoList);
         listTodo.setAdapter(listTODOadapter);
         registerForContextMenu(listTodo);
 
@@ -65,7 +66,8 @@ public class TodoListManagerActivity extends Activity {
     	case add_result_num:
     		if(resCode == RESULT_OK ){
     			String todo_title = data.getStringExtra("title");
-    			listTODOadapter.add(new ListItem(todo_title, null));  //TODO add "dueDate" of type java.util.Date
+    			Date date = (Date) data.getSerializableExtra("dueDate");
+    			listTODOadapter.add(new ListItem(todo_title, date)); 
     		}
     		break;
     	}

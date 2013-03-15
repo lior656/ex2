@@ -1,11 +1,14 @@
 package il.ac.huji.todolist;
 
+import java.util.Date;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 
 public class AddNewTodoItemActivity extends Activity {
@@ -34,7 +37,12 @@ public class AddNewTodoItemActivity extends Activity {
         		String todoTextStr = todoText.getText().toString();
         		if(todoTextStr != null) {
         			Intent result = new Intent();
-        			result.putExtra("title", todoTextStr); //TODO add "dueDate" of type java.util.Date
+        			DatePicker dateGot = (DatePicker) findViewById(R.id.datePicker);
+					@SuppressWarnings("deprecation")
+					Date date = new Date(dateGot.getYear() - 1900, dateGot.getMonth(), dateGot.getDayOfMonth());
+        			
+        			result.putExtra("title", todoTextStr); 
+        			result.putExtra("dueDate", date); 
         			setResult(RESULT_OK, result);
         		}
         		finish();
