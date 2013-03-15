@@ -23,7 +23,10 @@
             </intent-filter>
         </activity>
         
-        <activity android:name=".AddNewTodoItemActivity" />
+        <activity 
+            android:name=".AddNewTodoItemActivity" 
+            android:theme="@android:style/Theme.Dialog"
+            android:label="@string/add_itm_str" > </activity>
         
     </application>
 

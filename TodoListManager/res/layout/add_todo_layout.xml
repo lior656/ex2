@@ -31,17 +31,16 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/btnOK"
         android:layout_alignBottom="@+id/btnOK"
-        android:layout_toLeftOf="@+id/btnOK"
+        android:layout_alignParentLeft="true"
         android:text="@string/cancelStr" />
 
     <Button
         android:id="@+id/btnOK"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/datePicker1"
         android:layout_below="@+id/datePicker1"
-        android:layout_marginLeft="42dp"
-        android:layout_marginTop="26dp"
+        android:layout_marginTop="24dp"
+        android:layout_toRightOf="@+id/btnCancel"
         android:text="@string/okStr" />
 
 </RelativeLayout>

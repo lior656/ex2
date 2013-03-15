@@ -48,7 +48,9 @@ public final class R {
     }
     public static final class string {
         public static final int action_settings=0x7f050001;
+        public static final int add_itm_str=0x7f05000b;
         public static final int app_name=0x7f050000;
+        public static final int call_str_no_space=0x7f05000c;
         public static final int cancelStr=0x7f050009;
         public static final int edtNewHint=0x7f050003;
         public static final int emptyStr=0x7f050008;

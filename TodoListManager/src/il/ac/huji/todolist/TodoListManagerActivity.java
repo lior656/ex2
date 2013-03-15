@@ -22,7 +22,7 @@ public class TodoListManagerActivity extends Activity {
 	
 	private ArrayAdapter<ListItem> listTODOadapter;
 	private  ListView listTodo;
-	private String callStr = "Call ";
+	private String callStr = " ";
 	private final int add_result_num = 656;
 	List<ListItem> todoList;
 	
@@ -30,6 +30,7 @@ public class TodoListManagerActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_todo_list_manager);
+        callStr =  getString(R.string.call_str_no_space) + callStr;
         
         todoList = new ArrayList<ListItem>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);

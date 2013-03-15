@@ -12,6 +12,9 @@
      <string name="emptyStr"></string>
      <string name="cancelStr">Cancel</string>
      <string name="okStr">OK</string>
+     <string name="add_itm_str">Add New Item</string>
+      <string name="call_str_no_space">Call</string>
+     
      
 
 </resources>
