@@ -3,8 +3,10 @@ package il.ac.huji.todolist;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -22,6 +24,7 @@ public class TodoListManagerActivity extends Activity {
 	private ArrayAdapter<ListItem> listTODOadapter;
 	private EditText todoText;
 	private  ListView listTodo;
+	private String callStr = "Call ";
 	List<ListItem> todoList;
 	
     @Override
@@ -67,12 +70,13 @@ public class TodoListManagerActivity extends Activity {
 		menu.setHeaderTitle(str);
 		
       
-		if( str.startsWith("Call ")){
-			menu.getItem(R.id.menuItemCall).setVisible(true);
-			menu.getItem(R.id.menuItemCall).setEnabled(true);
+		if( str.startsWith(callStr)){
+			menu.findItem(R.id.menuItemCall).setTitle(str);
+			menu.findItem(R.id.menuItemCall).setVisible(true);
+			menu.findItem(R.id.menuItemCall).setEnabled(true);
 		}else {
-			menu.getItem(R.id.menuItemCall).setVisible(false);
-			menu.getItem(R.id.menuItemCall).setEnabled(false);	
+			menu.findItem(R.id.menuItemCall).setVisible(false);
+			menu.findItem(R.id.menuItemCall).setEnabled(false);	
 		}
 	}
 
@@ -89,7 +93,9 @@ public class TodoListManagerActivity extends Activity {
 			case R.id.menuItemCall:
 				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
 					String str = listTODOadapter.getItem(cheackedPos)._todo_title;
-					
+					String call = "tel:" + str.substring(callStr.length(), str.length());
+					Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(call));
+					startActivity(dial);
     	        }
 				break;
 		}
