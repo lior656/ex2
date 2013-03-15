@@ -66,8 +66,13 @@ public class TodoListManagerActivity extends Activity {
         String str = listTODOadapter.getItem(pos)._todo_title;
 		menu.setHeaderTitle(str);
 		
+      
 		if( str.startsWith("Call ")){
-			menu.getItem(index)
+			menu.getItem(R.id.menuItemCall).setVisible(true);
+			menu.getItem(R.id.menuItemCall).setEnabled(true);
+		}else {
+			menu.getItem(R.id.menuItemCall).setVisible(false);
+			menu.getItem(R.id.menuItemCall).setEnabled(false);	
 		}
 	}
 
@@ -79,6 +84,12 @@ public class TodoListManagerActivity extends Activity {
 			case R.id.menuItemDelete:
 				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
     	        	listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
+    	        }
+				break;
+			case R.id.menuItemCall:
+				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
+					String str = listTODOadapter.getItem(cheackedPos)._todo_title;
+					
     	        }
 				break;
 		}
