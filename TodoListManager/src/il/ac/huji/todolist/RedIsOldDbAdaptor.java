@@ -39,6 +39,9 @@ public class RedIsOldDbAdaptor extends SimpleCursorAdapter {
 		if(todo_date.before(now) && !dateStr.equals(nowInStr)){
 			mainText.setTextColor(Color.RED);
 			dateText.setTextColor(Color.RED);
+		}else {
+			mainText.setTextColor(Color.BLACK);
+			dateText.setTextColor(Color.BLACK);
 		}
 
 	}

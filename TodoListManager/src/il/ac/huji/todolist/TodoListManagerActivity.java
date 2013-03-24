@@ -1,8 +1,6 @@
 package il.ac.huji.todolist;
 
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,16 +14,13 @@ import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 public class TodoListManagerActivity extends Activity {
 
 	
-	private SimpleCursorAdapter listTODOadapter;
+	private RedIsOldDbAdaptor listTODOadapter;
 	private  ListView listTodo;
 	private SQLiteDatabase db;
 	private Cursor cursor;
@@ -45,7 +40,7 @@ public class TodoListManagerActivity extends Activity {
 		cursor = db.query("todo",	new String[] { "_id", "title", "due" },	null, null, null, null, null);
 		String[] from = { "title", "due" };
 		int[] to = { R.id.txtTodoTitle, R.id.txtTodoDueDate };
-		RedIsOldDbAdaptor listTODOadapter = new RedIsOldDbAdaptor(this, cursor, from, to);
+		listTODOadapter = new RedIsOldDbAdaptor(this, cursor, from, to);
 		listTodo.setAdapter(listTODOadapter);
 		
 		registerForContextMenu(listTodo);
@@ -92,8 +87,9 @@ public class TodoListManagerActivity extends Activity {
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		getMenuInflater().inflate(R.menu.todo_list_context_menu, menu);
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) menuInfo;
-        int pos = info.position;
-        String str = listTODOadapter.getItem(pos)._todo_title;
+		
+		Cursor cur = (Cursor) listTODOadapter.getItem(info.position);
+        String str = cur.getString(cur.getColumnIndex("title"));
 		menu.setHeaderTitle(str);
 		
       
@@ -107,20 +103,22 @@ public class TodoListManagerActivity extends Activity {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
 		Cursor cur = (Cursor) listTODOadapter.getItem(info.position);
-		if (cheackedPos ==  AdapterView.INVALID_POSITION || cheackedPos >= listTODOadapter.getCount()){
+		if (cur.isClosed()){
 			return true;
 		}
 		
 		switch (item.getItemId()){
 			case R.id.menuItemDelete:
-    	        listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
+				db.delete("todo", "_id = " + cur.getInt(cur.getColumnIndex("_id")), null);
+				cursor.requery();
 				break;
 			case R.id.menuItemCall:
-				String str = listTODOadapter.getItem(cheackedPos)._todo_title;
+				String str = cur.getString(cur.getColumnIndex("title"));
 				String call = "tel:" + str.substring(callStr.length(), str.length());
 				Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(call));
 				startActivity(dial);
