@@ -7,6 +7,7 @@ import java.util.List;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -70,15 +71,18 @@ public class TodoListManagerActivity extends Activity {
     	return true;
     }
     
-    protected void onActivityResult(int reqCode, int resCode, Intent data) {
+    @SuppressWarnings("deprecation")
+	protected void onActivityResult(int reqCode, int resCode, Intent data) {
     	switch (reqCode) {
     	case add_result_num:
     		if(resCode == RESULT_OK ){
     			String todo_title = data.getStringExtra("title");
     			Date date = (Date) data.getSerializableExtra("dueDate");
-    			db.insert("activities", null, values);//TODO
-    			cursor.requery();//TODO
-    			listTODOadapter.add(new ListItem(todo_title, date)); 
+    			ContentValues values = new ContentValues();
+    			values.put("title", todo_title);
+    			values.put("due", date.getTime());
+    			db.insert("todo", null, values);
+    			cursor.requery();
     		}
     		break;
     	}
@@ -106,20 +110,20 @@ public class TodoListManagerActivity extends Activity {
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo)item.getMenuInfo();
-		int cheackedPos = info.position;
+		Cursor cur = (Cursor) listTODOadapter.getItem(info.position);
+		if (cheackedPos ==  AdapterView.INVALID_POSITION || cheackedPos >= listTODOadapter.getCount()){
+			return true;
+		}
+		
 		switch (item.getItemId()){
 			case R.id.menuItemDelete:
-				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
-    	        	listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
-    	        }
+    	        listTODOadapter.remove(listTODOadapter.getItem(cheackedPos));
 				break;
 			case R.id.menuItemCall:
-				if (cheackedPos !=  AdapterView.INVALID_POSITION && cheackedPos < listTODOadapter.getCount()){
-					String str = listTODOadapter.getItem(cheackedPos)._todo_title;
-					String call = "tel:" + str.substring(callStr.length(), str.length());
-					Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(call));
-					startActivity(dial);
-    	        }
+				String str = listTODOadapter.getItem(cheackedPos)._todo_title;
+				String call = "tel:" + str.substring(callStr.length(), str.length());
+				Intent dial = new Intent(Intent.ACTION_DIAL, Uri.parse(call));
+				startActivity(dial);
 				break;
 		}
 		return true;
