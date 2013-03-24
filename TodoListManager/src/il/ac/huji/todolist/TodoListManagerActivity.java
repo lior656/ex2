@@ -8,6 +8,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -17,15 +19,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 public class TodoListManagerActivity extends Activity {
 
 	
-	private ArrayAdapter<ListItem> listTODOadapter;
+	private SimpleCursorAdapter listTODOadapter;
 	private  ListView listTodo;
+	private SQLiteDatabase db;
+	private Cursor cursor;
 	private String callStr = " ";
 	private final int add_result_num = 656;
-	List<ListItem> todoList;
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +37,17 @@ public class TodoListManagerActivity extends Activity {
         setContentView(R.layout.activity_todo_list_manager);
         callStr =  getString(R.string.call_str_no_space) + callStr;
         
-        todoList = new ArrayList<ListItem>();
         listTodo = (ListView)findViewById(R.id.lstTodoItems);
-        
-        listTODOadapter = new RedIsOldAdaptor(this, todoList);
-        listTodo.setAdapter(listTODOadapter);
-        registerForContextMenu(listTodo);
+        //TODO listTODOadapter = new RedIsOldAdaptor(this, todoList);       
+		Todo_db_helper dbHelper = new Todo_db_helper(this);
+		db = dbHelper.getWritableDatabase();
+		cursor = db.query("todo",	new String[] { "_id", "title", "due" },	null, null, null, null, null);
+		String[] from = { "title", "due" };
+		int[] to = { R.id.txtTodoTitle, R.id.txtTodoDueDate };
+		RedIsOldDbAdaptor listTODOadapter = new RedIsOldDbAdaptor(this, cursor, from, to);
+		listTodo.setAdapter(listTODOadapter);
+		
+		registerForContextMenu(listTodo);
 
     }
 
@@ -67,6 +76,8 @@ public class TodoListManagerActivity extends Activity {
     		if(resCode == RESULT_OK ){
     			String todo_title = data.getStringExtra("title");
     			Date date = (Date) data.getSerializableExtra("dueDate");
+    			db.insert("activities", null, values);//TODO
+    			cursor.requery();//TODO
     			listTODOadapter.add(new ListItem(todo_title, date)); 
     		}
     		break;
