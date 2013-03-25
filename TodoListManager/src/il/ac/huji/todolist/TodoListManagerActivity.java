@@ -5,10 +5,8 @@ import java.util.Date;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
@@ -22,7 +20,7 @@ public class TodoListManagerActivity extends Activity {
 	
 	private RedIsOldDbAdaptor listTODOadapter;
 	private  ListView listTodo;
-	private SQLiteDatabase db;
+	private TodoDAL dbControll;
 	private Cursor cursor;
 	private String callStr = " ";
 	private final int add_result_num = 656;
@@ -33,11 +31,9 @@ public class TodoListManagerActivity extends Activity {
         setContentView(R.layout.activity_todo_list_manager);
         callStr =  getString(R.string.call_str_no_space) + callStr;
         
-        listTodo = (ListView)findViewById(R.id.lstTodoItems);
-        //TODO listTODOadapter = new RedIsOldAdaptor(this, todoList);       
-		Todo_db_helper dbHelper = new Todo_db_helper(this);
-		db = dbHelper.getWritableDatabase();
-		cursor = db.query("todo",	new String[] { "_id", "title", "due" },	null, null, null, null, null);
+        listTodo = (ListView)findViewById(R.id.lstTodoItems);     
+        dbControll = new TodoDAL(this);
+		cursor = dbControll.getDbCursor();
 		String[] from = { "title", "due" };
 		int[] to = { R.id.txtTodoTitle, R.id.txtTodoDueDate };
 		listTODOadapter = new RedIsOldDbAdaptor(this, cursor, from, to);
@@ -71,12 +67,8 @@ public class TodoListManagerActivity extends Activity {
     	switch (reqCode) {
     	case add_result_num:
     		if(resCode == RESULT_OK ){
-    			String todo_title = data.getStringExtra("title");
-    			Date date = (Date) data.getSerializableExtra("dueDate");
-    			ContentValues values = new ContentValues();
-    			values.put("title", todo_title);
-    			values.put("due", date.getTime());
-    			db.insert("todo", null, values);
+    			ITodoItem item = new ListItem(data.getStringExtra("title") , (Date) data.getSerializableExtra("dueDate"));
+    			dbControll.insert(item);
     			cursor.requery();
     		}
     		break;
@@ -114,7 +106,8 @@ public class TodoListManagerActivity extends Activity {
 		
 		switch (item.getItemId()){
 			case R.id.menuItemDelete:
-				db.delete("todo", "_id = " + cur.getInt(cur.getColumnIndex("_id")), null);
+				ITodoItem todoItem = new ListItem(cur.getString(cur.getColumnIndex("title")) , null);
+    			dbControll.delete(todoItem);
 				cursor.requery();
 				break;
 			case R.id.menuItemCall:

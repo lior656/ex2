@@ -3,8 +3,8 @@ package il.ac.huji.todolist;
 import java.util.Date;
 
 public class ListItem implements ITodoItem{
-	public String _todo_title;
-	public Date _todo_date;
+	private String _todo_title;
+	private Date _todo_date;
 	
 	
 	public ListItem(String addStr, Date todo_date) {
