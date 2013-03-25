@@ -29,7 +29,6 @@ public class TodoDAL {
 		values.put("due", todoItem.getDueDate().getTime());
 		db.insert("todo", null, values);
 		ParseObject parseObj = new ParseObject("todo");
-		int a = 5;//TODO add _id?
 		parseObj.put("title", todoItem.getTitle());
 		parseObj.put("due", todoItem.getDueDate().getTime());
 		parseObj.saveInBackground();
