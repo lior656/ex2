@@ -28,7 +28,6 @@ public class TodoDAL {
 	}
 
 	public boolean update(ITodoItem todoItem) {
-		int a= 5; //TODO cheack methods.
 		ContentValues values = new ContentValues();
 		values.put("due", todoItem.getDueDate().getTime());
 		db.update("todo", values, "title = ?", new String[]{todoItem.getTitle()});
