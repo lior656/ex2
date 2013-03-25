@@ -13,8 +13,8 @@
      <string name="cancelStr">Cancel</string>
      <string name="okStr">OK</string>
      <string name="add_itm_str">Add New Item</string>
-      <string name="call_str_no_space">Call</string>
-     
-     
+     <string name="call_str_no_space">Call</string>
+     <string name="parseApplication">sZeRc57Qln3C31uO0wZsMk34sBDoyMmT32vzUCSN</string>
+     <string name="clientKey">BD0FEHClLVVwXDdi1sN1L9MJ1FaU7Qw4DfR4Y11S</string>
 
 </resources>

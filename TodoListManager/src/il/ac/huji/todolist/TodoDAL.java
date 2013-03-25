@@ -4,6 +4,9 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.parse.Parse;
+import com.parse.ParseObject;
+
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
@@ -17,6 +20,7 @@ public class TodoDAL {
 	public TodoDAL(Context context) { 
 		Todo_db_helper dbHelper = new Todo_db_helper(context);
 		db = dbHelper.getWritableDatabase();
+		Parse.initialize(context, context.getString(R.string.parseApplication), context.getString(R.string.clientKey)); 
 	}
 
 	public boolean insert(ITodoItem todoItem) {
@@ -24,6 +28,11 @@ public class TodoDAL {
 		values.put("title", todoItem.getTitle());
 		values.put("due", todoItem.getDueDate().getTime());
 		db.insert("todo", null, values);
+		ParseObject parseObj = new ParseObject("todo");
+		int a = 5;//TODO add _id?
+		parseObj.put("title", todoItem.getTitle());
+		parseObj.put("due", todoItem.getDueDate().getTime());
+		parseObj.saveInBackground();
 		return true;
 	}
 
