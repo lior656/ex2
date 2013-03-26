@@ -5,7 +5,10 @@ import java.util.Date;
 import java.util.List;
 
 import com.parse.Parse;
+import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
+import com.parse.PushService;
+import com.parse.ParseUser;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -18,9 +21,11 @@ public class TodoDAL {
 
 
 	public TodoDAL(Context context) { 
+		int a = 5;//Yes, whenever the underlying database method fails for any reason. It is also testable -- you can try updating an item that doesn't exist, or deleting an item that doesn't exist, or inserting an item with a null title, etc.
 		Todo_db_helper dbHelper = new Todo_db_helper(context);
 		db = dbHelper.getWritableDatabase();
 		Parse.initialize(context, context.getString(R.string.parseApplication), context.getString(R.string.clientKey)); 
+		ParseUser.enableAutomaticUser();
 	}
 
 	public boolean insert(ITodoItem todoItem) {
@@ -28,6 +33,7 @@ public class TodoDAL {
 		values.put("title", todoItem.getTitle());
 		values.put("due", todoItem.getDueDate().getTime());
 		db.insert("todo", null, values);
+		
 		ParseObject parseObj = new ParseObject("todo");
 		parseObj.put("title", todoItem.getTitle());
 		parseObj.put("due", todoItem.getDueDate().getTime());
@@ -43,6 +49,11 @@ public class TodoDAL {
 	}
 	public boolean delete(ITodoItem todoItem) { 
 		db.delete("todo", "title = ?", new String[]{todoItem.getTitle()});
+		
+		ParseObject parseObj = new ParseObject("todo");
+		parseObj.put("title", todoItem.getTitle());
+		parseObj.put("due", todoItem.getDueDate().getTime());
+		parseObj.deleteInBackground();
 		return true;
 	}
 	public List<ITodoItem> all() {
