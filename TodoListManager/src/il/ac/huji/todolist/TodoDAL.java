@@ -4,11 +4,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import com.parse.FindCallback;
 import com.parse.Parse;
-import com.parse.ParseAnalytics;
 import com.parse.ParseObject;
-import com.parse.PushService;
+import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.ParseException;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -21,7 +22,6 @@ public class TodoDAL {
 
 
 	public TodoDAL(Context context) { 
-		int a = 5;//Yes, whenever the underlying database method fails for any reason. It is also testable -- you can try updating an item that doesn't exist, or deleting an item that doesn't exist, or inserting an item with a null title, etc.
 		Todo_db_helper dbHelper = new Todo_db_helper(context);
 		db = dbHelper.getWritableDatabase();
 		Parse.initialize(context, context.getString(R.string.parseApplication), context.getString(R.string.clientKey)); 
@@ -29,10 +29,11 @@ public class TodoDAL {
 	}
 
 	public boolean insert(ITodoItem todoItem) {
+		if(todoItem.getTitle() == null || todoItem.getDueDate()==null) return false;
 		ContentValues values = new ContentValues();
 		values.put("title", todoItem.getTitle());
 		values.put("due", todoItem.getDueDate().getTime());
-		db.insert("todo", null, values);
+		if (-1 == db.insert("todo", null, values)) return false;
 		
 		ParseObject parseObj = new ParseObject("todo");
 		parseObj.put("title", todoItem.getTitle());
@@ -42,18 +43,48 @@ public class TodoDAL {
 	}
 
 	public boolean update(ITodoItem todoItem) {
+		if(todoItem.getTitle() == null || todoItem.getDueDate()==null) return false;
+		final long timeLong = todoItem.getDueDate().getTime();
 		ContentValues values = new ContentValues();
-		values.put("due", todoItem.getDueDate().getTime());
-		db.update("todo", values, "title = ?", new String[]{todoItem.getTitle()});
+		values.put("due", timeLong);
+		int numRowsEffected = db.update("todo", values, "title = ?", new String[]{todoItem.getTitle()});
+		if (numRowsEffected == 0) return false;
+		
+		ParseQuery query = new ParseQuery("todo");
+		query.whereEqualTo("title", todoItem.getTitle());
+		query.findInBackground(new FindCallback() {
+		    public void done(List<ParseObject> scoreList, ParseException e) {
+		        if (e == null) {
+		        	for(ParseObject pObj:scoreList){
+		        		pObj.put("due", timeLong);
+		        		pObj.saveInBackground();
+		        	}
+		        } else {
+		            System.out.println("-----Error in delete from parse!");
+		        }
+		    }
+		});
 		return true;
 	}
+	
 	public boolean delete(ITodoItem todoItem) { 
-		db.delete("todo", "title = ?", new String[]{todoItem.getTitle()});
+		if(todoItem.getTitle() == null || todoItem.getDueDate()==null) return false;
+		int numRowsEffected = db.delete("todo", "title = ?", new String[]{todoItem.getTitle()});
+		if (numRowsEffected == 0) return false;
 		
-		ParseObject parseObj = new ParseObject("todo");
-		parseObj.put("title", todoItem.getTitle());
-		parseObj.put("due", todoItem.getDueDate().getTime());
-		parseObj.deleteInBackground();
+		ParseQuery query = new ParseQuery("todo");
+		query.whereEqualTo("title", todoItem.getTitle());
+		query.findInBackground(new FindCallback() {
+		    public void done(List<ParseObject> scoreList, ParseException e) {
+		        if (e == null) {
+		        	for(ParseObject pObj:scoreList){
+		        		pObj.deleteInBackground();
+		        	}
+		        } else {
+		            System.out.println("-----Error in delete from parse!");
+		        }
+		    }
+		});
 		return true;
 	}
 	public List<ITodoItem> all() {
