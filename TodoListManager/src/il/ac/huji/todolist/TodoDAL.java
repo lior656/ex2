@@ -68,7 +68,7 @@ public class TodoDAL {
 	}
 	
 	public boolean delete(ITodoItem todoItem) { 
-		if(todoItem.getTitle() == null || todoItem.getDueDate()==null) return false;
+		if(todoItem.getTitle() == null) return false;
 		int numRowsEffected = db.delete("todo", "title = ?", new String[]{todoItem.getTitle()});
 		if (numRowsEffected == 0) return false;
 		

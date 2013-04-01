@@ -42,11 +42,12 @@ public class TodoListManagerActivity extends Activity {
 		
 		registerForContextMenu(listTodo);
 		
-		/*int a = 5; //tests
+		/*int a = 5; // my update tests
 		List<ITodoItem> list = dbControll.all();
 		System.out.println("----list at start:");
 		for (ITodoItem i:list) System.out.println(i.getTitle() + ":" + i.getDueDate().toGMTString());
-		dbControll.insert(new ListItem("my 1", new Date(2013, 10, 1)));
+		
+		dbControll.insert(new ListItem("my 1", new Date(2013, 10, 2)));
 		dbControll.insert(new ListItem("my 2", new Date(2013, 10, 5)));
 		dbControll.update(new ListItem("my 2", new Date(2013, 10, 2)));
 		dbControll.update(new ListItem("my 3", new Date(2013, 10, 3)));
@@ -121,7 +122,7 @@ public class TodoListManagerActivity extends Activity {
 		switch (item.getItemId()){
 			case R.id.menuItemDelete:
 				ITodoItem todoItem = new ListItem(cur.getString(cur.getColumnIndex("title")) , null);
-    			dbControll.delete(todoItem);
+				dbControll.delete(todoItem);
 				cursor.requery();
 				break;
 			case R.id.menuItemCall:
